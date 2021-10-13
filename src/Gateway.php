@@ -142,6 +142,16 @@ class Gateway extends AbstractGateway
         return $this->setParameter('hideCurrency', $value);
     }
 
+    public function getAddress3()
+    {
+        return $this->getParameter('address3');
+    }
+
+    public function setAddress3($value)
+    {
+        return $this->setParameter('address3', $value);
+    }
+
     public function purchase(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\WorldPay\Message\PurchaseRequest', $parameters);

@@ -138,6 +138,17 @@ class PurchaseRequest extends AbstractRequest
         return $this->setParameter('hideCurrency', $value);
     }
 
+    public function getAddress3()
+    {
+        return $this->getParameter('address3');
+    }
+
+    public function setAddress3($value)
+    {
+        return $this->setParameter('address3', $value);
+    }
+
+
     public function getData()
     {
         $this->validate('amount');
@@ -158,18 +169,28 @@ class PurchaseRequest extends AbstractRequest
         $data['testMode'] = $this->getTestMode() ? 100 : 0;
         $data['MC_callback'] = $this->getNotifyUrl() ?: $this->getReturnUrl();
         $data['successURL'] = $this->getReturnUrl();
-        $data['paymentType'] = $this -> getPaymentType();
-        $data['noLanguageMenu'] = $this -> getNoLanguageMenu();
-        $data['fixContact'] = $this -> getFixContact();
-        $data['hideContact'] = $this -> getHideContact();
-        $data['hideCurrency'] = $this -> getHideCurrency();
+        $data['CM_cancel_payment_url'] = $this->getCancelUrl();
+        $data['paymentType'] = $this->getPaymentType();
+        $data['noLanguageMenu'] = $this->getNoLanguageMenu();
+        $data['fixContact'] = $this->getFixContact();
+        $data['hideContact'] = $this->getHideContact();
+        $data['hideCurrency'] = $this->getHideCurrency();
 
         if ($this->getCard()) {
             $data['name'] = $this->getCard()->getName();
             $data['address1'] = $this->getCard()->getAddress1();
-            $data['address2'] = $this->getCard()->getAddress2();
+            if ($this->getCard()->getAddress2()) {
+                $data['address2'] = $this->getCard()->getAddress2();
+            }
+            // as address 3 is not in abstract creditCard class so we change key address3 
+            if ($this->getAddress3()) {
+                $data['address3'] = $this->getAddress3();
+            }
+            if ($this->getCard()->getState()) {
+                $data['region'] = $this->getCard()->getState();
+            }
+
             $data['town'] = $this->getCard()->getCity();
-            $data['region'] = $this->getCard()->getState();
             $data['postcode'] = $this->getCard()->getPostcode();
             $data['country'] = $this->getCard()->getCountry();
             $data['tel'] = $this->getCard()->getPhone();
